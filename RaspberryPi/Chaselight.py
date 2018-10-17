@@ -82,7 +82,7 @@ try:
 				center = None  
 
 				if len(cnts) > 0:	
-					c = max(cnts, key = cv2.contourArea)  #contourArea是计算轮廓，找到
+					c = max(cnts, key = cv2.contourArea)  #contourArea是计算轮廓面积，选轮廓面积最大的值，这里的key是最大一个标准，为了找面积最大。
 					((x, y), radius) = cv2.minEnclosingCircle(c)  #找到外围圆
 					M = cv2.moments(c)  
 					center = (int(M["m10"]/M["m00"]), int(M["m01"]/M["m00"]))  #算出圆心
