@@ -5,7 +5,7 @@ import time
 import cv2
 import numpy as np
 
-#强行注释：下面定义颜色上下限，用的是hsv颜色而不是rgb颜色，自行百度！
+#下面定义颜色上下限，用的是hsv颜色而不是rgb颜色，自行百度！
 # red1 = np.array([170, 100, 100])  
 # red2 = np.array([179, 255, 255]) 
 red1 = np.array([0, 0, 221])  
