@@ -1,6 +1,12 @@
 # coding:utf-8
 
 # 加入摄像头模块，让小车实现自动循迹行驶
+# 思路为：摄像头读取图像，进行二值化，将白色的赛道凸显出来
+# 选择下方的一行像素，黑色为0，白色为255
+# 找到白色值的中点
+# 目标中点与标准中点（320）进行比较得出偏移量
+# 根据偏移量来控制小车左右轮的转速
+# 考虑了偏移过多失控->停止;偏移量在一定范围内->高速直行
 
 import RPi.GPIO as gpio
 import time
@@ -8,33 +14,35 @@ import cv2
 import numpy as np
 
 # 定义引脚
-in1 = 12
-in2 = 16
-in3 = 18
-in4 = 22
+pin1 = 12
+pin2 = 16
+pin3 = 18
+pin4 = 22
 
 # 设置GPIO口为BOARD编号规范
 gpio.setmode(gpio.BOARD)
 
 # 设置GPIO口为输出
-gpio.setup(in1, gpio.OUT)
-gpio.setup(in2, gpio.OUT)
-gpio.setup(in3, gpio.OUT)
-gpio.setup(in4, gpio.OUT)
+gpio.setup(pin1, gpio.OUT)
+gpio.setup(pin2, gpio.OUT)
+gpio.setup(pin3, gpio.OUT)
+gpio.setup(pin4, gpio.OUT)
 
 # 设置PWM波,频率为500Hz
-pwm1 = gpio.PWM(in1, 500)
-pwm2 = gpio.PWM(in2, 500)
-pwm3 = gpio.PWM(in3, 500)
-pwm4 = gpio.PWM(in4, 500)
+pwm1 = gpio.PWM(pin1, 500)
+pwm2 = gpio.PWM(pin2, 500)
+pwm3 = gpio.PWM(pin3, 500)
+pwm4 = gpio.PWM(pin4, 500)
+
+# pwm波控制初始化
 pwm1.start(0)
 pwm2.start(0)
 pwm3.start(0)
 pwm4.start(0)
 
-# 初始化定义
+# center定义
 center = 320
-# 打开摄像头
+# 打开摄像头，图像尺寸640*480（长*高），opencv存储值为480*640（行*列）
 cap = cv2.VideoCapture(0)
 while (1):
     ret, frame = cap.read()
@@ -49,20 +57,23 @@ while (1):
 
     # 单看第400行的像素值s
     color = dst[400]
-    # 找到黑色的像素点个数s
-    zero_count = np.sum(color == 255)
-    zero_index = np.where(color == 255)
+    # 找到白色的像素点个数
+    white_count = np.sum(color == 255)
+    # 找到白色的像素点索引
+    white_index = np.where(color == 255)
 
-    # 防止zero_count=0的报错
-    if zero_count == 0:
-        zero_count = 1
+    # 防止white_count=0的报错
+    if white_count == 0:
+        white_count = 1
 
     # 找到黑色像素的中心点位置
-    center = (zero_index[0][zero_count - 1] + zero_index[0][0]) / 2
+    center = (white_index[0][white_count - 1] + white_index[0][0]) / 2
 
+    # 计算出center与标准中心点的偏移量
     direction = center - 320
-    # 变速行驶
+
     print(direction)
+
     # 停止
     if abs(direction) > 250:
         pwm1.ChangeDutyCycle(0)
@@ -99,6 +110,7 @@ while (1):
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
+# 释放清理
 cap.release()
 cv2.destroyAllWindows()
 pwm1.stop()
