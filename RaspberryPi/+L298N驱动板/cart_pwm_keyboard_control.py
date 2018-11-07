@@ -108,14 +108,12 @@ def on_release(key):
     if key == keyboard.Key.esc:
         return False
 
-
+# 键盘监听
 while True:
     with keyboard.Listener(
             on_press=on_press, on_release=on_release) as listener:
         listener.join()
 
-# 秒级睡眠
-#time.sleep(2)
 pwm1.stop()
 pwm2.stop()
 pwm3.stop()
