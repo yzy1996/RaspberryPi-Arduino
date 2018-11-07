@@ -32,8 +32,6 @@ pwm2.start(0)
 pwm3.start(0)
 pwm4.start(0)
 
-
-
 # 初始化定义
 center = 320
 # 打开摄像头
