@@ -82,7 +82,7 @@ while (1):
         pwm4.ChangeDutyCycle(0)
 
     # 右转
-    elif direction > 0:
+    elif direction >= 0:
         # 限制在70以内
         if direction > 70:
             direction = 70
