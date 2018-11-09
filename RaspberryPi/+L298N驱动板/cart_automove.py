@@ -81,15 +81,8 @@ while (1):
         pwm3.ChangeDutyCycle(0)
         pwm4.ChangeDutyCycle(0)
 
-    # 直行
-    elif abs(direction) < 20:
-        pwm1.ChangeDutyCycle(100)
-        pwm2.ChangeDutyCycle(0)
-        pwm3.ChangeDutyCycle(100)
-        pwm4.ChangeDutyCycle(0)
-
     # 右转
-    elif direction > 20:
+    elif direction > 0:
         # 限制在70以内
         if direction > 70:
             direction = 70
@@ -99,7 +92,7 @@ while (1):
         pwm4.ChangeDutyCycle(0)
 
     # 左转
-    elif direction < -20:
+    elif direction < -0:
         if direction < -70:
             direction = -70
         pwm1.ChangeDutyCycle(30)
