@@ -29,3 +29,5 @@ cart_pwm_move_control.py：实现键盘控制小车前后左右，使用wasd操�
 ## Cat_classify
 
 这是一个运用yolo3实现的识别猫图片的程序，模型已经训练好，可以直接使用，数据集可以到Mygithub dataset里面去下载。
+
+参考CSDN博客：https://blog.csdn.net/yzy_1996/column/info/29436
